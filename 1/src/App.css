@@ -1,0 +1,13 @@
+.btn {
+  border: .7px solid black;
+  padding: 6px;
+  margin: 0 4px;
+  border-radius: 4px;
+  background: #EFEFEF;
+}
+
+.btn:hover,
+.btn:active {
+  background: #AEAEAE;
+  cursor: pointer;
+}
