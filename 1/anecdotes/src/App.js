@@ -1,20 +1,43 @@
 import React, { useState } from 'react'
-import './App.css'
+import Anecdote from './Anecdote';
+import Controls from './Controls';
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState({
+    0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0
+  });
+
 
   const handleAnectodeChange = () => {
     const random = Math.floor(Math.random() * anecdotes.length);
     setSelected(random);
   }
 
+  const handleVoteClick = () => {
+    const pointsCopy = { ...points };
+    pointsCopy[selected] += 1;
+    setPoints(pointsCopy);
+  }
+
+  const getMostVotedAnecdote = () => {
+    return Object
+      .keys(points)
+      .reduce((acc, key) => (points[key] > points[acc]) ? key : acc);
+  }
+
+  const mostVotedIndex = getMostVotedAnecdote();
+
   return (
     <div>
-      {anecdotes[selected]}
-      <div>
-        <button onClick={handleAnectodeChange}>next anecdote</button>
-      </div>
+      <h2>Anecdote of the day</h2>
+
+      <Anecdote text={anecdotes[selected]} score={points[selected]} />
+      <Controls onVotePress={handleVoteClick} onNextPress={handleAnectodeChange} />
+
+      <h2>Anecdote with most votes</h2>
+      <Anecdote text={anecdotes[mostVotedIndex]} score={points[mostVotedIndex]} />
+
     </div>
   )
 }
