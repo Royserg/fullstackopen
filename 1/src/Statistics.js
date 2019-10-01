@@ -1,5 +1,5 @@
 import React from 'react';
-import Display from './Display';
+import Statistic from './Statistic';
 
 const Statistics = ({ good, neutral, bad }) => {
 
@@ -17,13 +17,13 @@ const Statistics = ({ good, neutral, bad }) => {
         :
         (
           <React.Fragment>
-            <Display text="good" value={good} />
-            <Display text="neutral" value={neutral} />
-            <Display text="bad" value={bad} />
+            <Statistic text="good" value={good} />
+            <Statistic text="neutral" value={neutral} />
+            <Statistic text="bad" value={bad} />
 
-            <Display text="all" value={allCount} />
-            <Display text="average" value={average} />
-            <Display text="positive" value={positive + ' %'} />
+            <Statistic text="all" value={allCount} />
+            <Statistic text="average" value={average} />
+            <Statistic text="positive" value={positive + ' %'} />
           </React.Fragment>
         )
       }

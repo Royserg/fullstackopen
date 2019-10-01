@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Display = ({ text, value }) => {
+const Statistic = ({ text, value }) => {
   return (
     <div>
       {text}: {value}
@@ -8,4 +8,4 @@ const Display = ({ text, value }) => {
   )
 }
 
-export default Display;
+export default Statistic;
