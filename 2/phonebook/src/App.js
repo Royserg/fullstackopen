@@ -1,42 +1,50 @@
 import React, { useState } from 'react';
 import './App.css';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-123456' }
   ])
 
-  const [newName, setNewName] = useState('')
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
-
-  const handleAddName = (e) => {
+  const handleAddPerson = (e) => {
     // Prevent page refresh
     e.preventDefault();
 
     const newPerson = {
-      name: newName
+      name: newName,
+      number: newNumber
+    }
+
+    // Person already exists
+    if (persons.find(person => person.name === newPerson.name)) {
+      alert(`${newPerson.name} is already added to phonebook`);
+      return;
     }
 
     setPersons(persons.concat(newPerson));
-    // Clear input field
+    // Clear input fields
     setNewName('');
+    setNewNumber('');
   }
-
-  const rows = persons.map((person, index) => <div key={index}>{person.name}</div>)
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={handleAddName}>
-        <div>
-          name: <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onSubmit={handleAddPerson}
+        name={newName}
+        number={newNumber}
+        onNameChange={(name) => setNewName(name)}
+        onNumberChange={(number) => setNewNumber(number)}
+      />
+
       <h2>Numbers</h2>
-      {rows}
+      <Persons persons={persons} />
     </div>
   )
 }
