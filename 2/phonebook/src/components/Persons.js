@@ -1,8 +1,10 @@
 import React from 'react';
 import BookRow from './BookRow';
 
-const Persons = ({ persons }) => {
-  const rows = persons.map((person, index) => <BookRow key={index} person={person} />)
+const Persons = ({ persons, filter }) => {
+  const rows = persons
+    .filter(person => person.name.toLowerCase().startsWith(filter.toLowerCase()))
+    .map((person, index) => <BookRow key={index} person={person} />)
 
   return (
     <div>
