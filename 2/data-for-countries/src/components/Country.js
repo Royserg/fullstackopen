@@ -1,7 +1,7 @@
 import React from 'react';
+import WeatherInfo from './WeatherInfo';
 
 const Country = ({ country, detailed, onShowClick }) => {
-
   return (
     <>
       {detailed === true ?
@@ -20,6 +20,7 @@ const Country = ({ country, detailed, onShowClick }) => {
               src={country.flag}
               alt={`flag of ${country.name}`} />
           </div>
+          <WeatherInfo city={country.capital} />
         </div>
         :
         <li>
