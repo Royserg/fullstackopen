@@ -17,11 +17,18 @@ function App () {
       })
   }, [])
 
+  const handleShowClick = country => {
+    setCountry(country);
+  }
 
   return (
     <div>
       <SearchInput value={country} onChange={(e) => setCountry(e.target.value)} />
-      <CountriesList countries={countries} filter={country.toLowerCase()} />
+      <CountriesList
+        countries={countries}
+        filter={country.toLowerCase()}
+        onShowClick={handleShowClick}
+      />
     </div>
   );
 }

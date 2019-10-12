@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchInput = ({ country, onChange }) => {
+const SearchInput = ({ value, onChange }) => {
   return (
     <div>
       <label htmlFor="country">find countries</label>
@@ -8,7 +8,7 @@ const SearchInput = ({ country, onChange }) => {
         id="country"
         name="country"
         type="text"
-        value={country}
+        value={value}
         onChange={onChange}
       />
     </div>

@@ -1,11 +1,14 @@
 import React from 'react';
 import Country from './Country';
 
-const CountriesList = ({ countries, filter }) => {
+const CountriesList = ({ countries, filter, onShowClick }) => {
 
   const rows = countries
     .filter(country => country.name.toLowerCase().startsWith(filter))
-    .map(country => <Country key={country.alpha3Code} country={country} />)
+    .map(country => <Country
+      key={country.alpha3Code}
+      country={country}
+      onShowClick={onShowClick} />)
 
   return (
     <div>

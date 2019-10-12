@@ -1,8 +1,7 @@
 import React from 'react';
 
-const Country = ({ country, detailed }) => {
+const Country = ({ country, detailed, onShowClick }) => {
 
-  console.log(country);
   return (
     <>
       {detailed === true ?
@@ -25,6 +24,7 @@ const Country = ({ country, detailed }) => {
         :
         <li>
           {country.name}
+          <button onClick={() => onShowClick(country.name)} >show</button>
         </li>
       }
     </>
