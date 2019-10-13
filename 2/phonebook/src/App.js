@@ -1,31 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './App.css';
+import personService from './services/personService';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [filter, setFilter] = useState('');
-
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
+    personService
+      .getAll()
+      .then(persons => {
+        setPersons(persons);
       })
-
   }, [])
 
   const handleAddPerson = (e) => {
     // Prevent page refresh
     e.preventDefault();
-
     const newPerson = {
       name: newName,
       number: newNumber
@@ -37,10 +33,14 @@ const App = () => {
       return;
     }
 
-    setPersons(persons.concat(newPerson));
-    // Clear input fields
-    setNewName('');
-    setNewNumber('');
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+        // Clear input fields
+        setNewName('');
+        setNewNumber('');
+      })
   }
 
   const handleFilterChange = (e) => {
