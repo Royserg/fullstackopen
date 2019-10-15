@@ -20,3 +20,13 @@
 .App-link {
   color: #09d3ac;
 }
+
+.notification {
+  border: 2px solid green;
+  color: green;
+  border-radius: 5px;
+  background: rgba(0, 200, 0, .5);
+  margin: 10px 5px;
+  padding: 7px;
+  width: 40%;
+}
