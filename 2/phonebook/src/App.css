@@ -22,11 +22,20 @@
 }
 
 .notification {
-  border: 2px solid green;
-  color: green;
   border-radius: 5px;
-  background: rgba(0, 200, 0, .5);
   margin: 10px 5px;
   padding: 7px;
   width: 40%;
+}
+
+.notification--success {
+  border: 2px solid green;
+  color: green;
+  background: rgba(0, 200, 0, .5);
+}
+
+.notification--danger {
+  border: 2px solid rgb(136, 10, 17);
+  color: rgb(168, 11, 11);
+  background: rgba(195, 9, 9, 0.5);
 }

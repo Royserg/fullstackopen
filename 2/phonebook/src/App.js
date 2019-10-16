@@ -12,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [notification, setNotification] = useState(null);
+  const [success, setSuccess] = useState(true);
 
   useEffect(() => {
     personService
@@ -41,8 +42,12 @@ const App = () => {
           .update(personExists.id, newPerson)
           .then(changedPerson => {
             setPersons(persons.map(person => person.id !== changedPerson.id ? person : changedPerson));
-            makeNotification(`Changed ${personExists.name}'s number`);
+            makeNotification(`Changed ${personExists.name}'s number`, true);
           })
+          .catch(err => {
+            makeNotification(`Information on ${personExists.name} has been removed from the server`);
+            setPersons(persons.filter(person => person.id !== personExists.id));
+          });
       }
 
       return;
@@ -52,11 +57,14 @@ const App = () => {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
-        makeNotification(`Added ${returnedPerson.name}`);
+        makeNotification(`Added ${returnedPerson.name}`, true);
         // Clear input fields
         setNewName('');
         setNewNumber('');
       })
+      .catch(err => {
+        makeNotification(`Can't add person, ${err}`, false);
+      });
   }
 
   const handleFilterChange = e => {
@@ -68,11 +76,16 @@ const App = () => {
       .deleteOne(id)
       .then(response => {
         setPersons(persons.filter(person => person.id !== id));
+        makeNotification('Deleted successfully', true);
+      })
+      .catch(err => {
+        makeNotification(`Couldn't delete`, false);
       });
   }
 
-  const makeNotification = message => {
+  const makeNotification = (message, isSuccess) => {
     setNotification(message);
+    setSuccess(isSuccess);
     setTimeout(() => {
       setNotification(null);
     }, 3000)
@@ -81,7 +94,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} />
+      <Notification message={notification} success={success} />
       <Filter onFilterChange={handleFilterChange} />
       <PersonForm
         onSubmit={handleAddPerson}
