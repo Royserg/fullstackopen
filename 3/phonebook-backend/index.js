@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const PORT = 3001;
+const PORT = 3001
 
 const persons = [
   {
@@ -26,7 +26,11 @@ const persons = [
 ]
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons);
+  res.json(persons)
+})
+
+app.get('/info', (req, res) => {
+  res.send(`Phonebook has info for ${persons.length} people\n${new Date()}`)
 })
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`))
