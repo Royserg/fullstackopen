@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 
-const persons = [
+let persons = [
   {
     name: "Arto Hellas",
     number: "040-123456",
@@ -25,14 +25,15 @@ const persons = [
   }
 ]
 
+app.get('/info', (req, res) => {
+  res.send(`Phonebook has info for ${persons.length} people\n${new Date()}`)
+})
+// Get all persons
 app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
-app.get('/info', (req, res) => {
-  res.send(`Phonebook has info for ${persons.length} people\n${new Date()}`)
-})
-
+// Get one person by id
 app.get('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
 
@@ -43,6 +44,15 @@ app.get('/api/persons/:id', (req, res) => {
   }
 
   res.json(person)
+})
+
+// Delete person of given id
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+
+  persons = persons.filter(person => person.id !== id)
+
+  res.status(204).end()
 })
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`))
