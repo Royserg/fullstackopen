@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 const PORT = 3001
 
+app.use(express.json())
+
 let persons = [
   {
     name: "Arto Hellas",
@@ -54,5 +56,27 @@ app.delete('/api/persons/:id', (req, res) => {
 
   res.status(204).end()
 })
+
+
+// Add person
+app.post('/api/persons', (req, res) => {
+  const { name, number } = req.body
+
+  if (!name || !number) {
+    return res.status(400).json({
+      error: 'name or number missing'
+    })
+  }
+
+  const newPerson = {
+    name,
+    number,
+    id: Math.floor(Math.random() * 450)
+  }
+
+  persons.push(newPerson)
+  return res.json(newPerson)
+})
+
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`))
