@@ -8,6 +8,8 @@ const PORT = process.env.PORT || 3001
 // Enable cors
 app.use(cors())
 app.use(express.json())
+// Serve static files
+app.use(express.static('build'))
 
 // morgan.token('data', (req, res) => {
 //   return JSON.stringify(req.body)
@@ -103,11 +105,6 @@ app.post('/api/persons', (req, res) => {
 
   persons.push(newPerson)
   return res.json(newPerson)
-})
-
-// Default route to handle wrong requests
-app.get('*', (req, res) => {
-  res.json(persons)
 })
 
 
