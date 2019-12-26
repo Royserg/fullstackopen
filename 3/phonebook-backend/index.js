@@ -1,14 +1,20 @@
+require('dotenv').config()
 const express = require('express')
 // const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 5000
 
 // Enable cors
 app.use(cors())
 app.use(express.json())
+
 // Serve static files
+// When receiving `GET` request corresponding page will be checked
+// in 'build' directory, if correct file found, express returns it
+// index.html goes to `/` or `/index.html`
 app.use(express.static('build'))
 
 // morgan.token('data', (req, res) => {
@@ -26,57 +32,47 @@ app.use(express.static('build'))
 //   ].join(' ')
 // }))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 4
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 2
-  }
-]
-
-app.get('/info', (req, res) => {
-  res.send(`Phonebook has info for ${persons.length} people\n${new Date()}`)
-})
+// == API ==
 // Get all persons
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+
+  Person
+    .find({})
+    .then(persons => {
+      res.json(persons)
+    })
 })
+
+
 
 // Get one person by id
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
 
-  const person = persons.find(person => person.id === id);
-
-  if (!person) {
-    return res.status(404).end()
-  }
-
-  res.json(person)
+  Person
+    .findById(id)
+    .then(foundPerson => {
+      res.json(foundPerson)
+    })
+    .catch(err => {
+      res
+        .status(404)
+        .json({ error: 'Person not found' })
+    })
 })
 
 // Delete person of given id
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
+  const id = req.params.id
 
-  persons = persons.filter(person => person.id !== id)
-
-  res.status(204).end()
+  Person
+    .deleteOne({ _id: id })
+    .then(result => {
+      res.status(204).end()
+    })
+    .catch(error => {
+      res.status(500).json({ error })
+    })
 })
 
 
@@ -85,26 +81,31 @@ app.post('/api/persons', (req, res) => {
   const { name, number } = req.body
 
   if (!name || !number) {
-    return res.status(400).json({
-      error: 'name or number missing'
+    return res
+      .status(400)
+      .json({ error: 'name or number missing' })
+  }
+
+  // Allow duplications: enabled
+  // if (Person.find({ name }).length > 0) {
+  //   return res
+  //     .status(400)
+  //     .json({ error: 'name must be unique' })
+  // }
+
+
+  const person = new Person({ name, number })
+  person
+    .save()
+    .then(savedPerson => {
+      res.json(savedPerson)
     })
-  }
-
-  if (persons.find(person => person.name === name)) {
-    return res.status(400).json({
-      error: 'name must be unique'
-    })
-  }
+})
 
 
-  const newPerson = {
-    name,
-    number,
-    id: Math.floor(Math.random() * 450)
-  }
-
-  persons.push(newPerson)
-  return res.json(newPerson)
+// Fallback route, redirects to root
+app.get('*', (req, res) => {
+  res.redirect(301, '/')
 })
 
 
