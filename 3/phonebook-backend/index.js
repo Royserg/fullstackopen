@@ -3,6 +3,8 @@ const express = require('express')
 // const morgan = require('morgan')
 const cors = require('cors')
 const Person = require('./models/person')
+const errorHandler = require('./middlewares/errorHandler')
+const unknownEndpoint = require('./middlewares/unknownEndpoint')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -43,41 +45,44 @@ app.get('/api/persons', (req, res) => {
     })
 })
 
-
-
 // Get one person by id
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
 
   Person
     .findById(id)
-    .then(foundPerson => {
-      res.json(foundPerson)
+    .then(person => {
+      if (person) {
+        res.json(person)
+      } else {
+        res
+          .status(404)
+          .json({ error: 'Person not found' })
+      }
+
     })
-    .catch(err => {
-      res
-        .status(404)
-        .json({ error: 'Person not found' })
+    .catch(error => {
+      next(error)
     })
 })
 
 // Delete person of given id
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
 
   Person
-    .deleteOne({ _id: id })
+    .findByIdAndDelete(id)
     .then(result => {
       res.status(204).end()
     })
     .catch(error => {
-      res.status(500).json({ error })
+      next(error)
     })
 })
 
 
 // Add person
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
   const { name, number } = req.body
 
   if (!name || !number) {
@@ -86,20 +91,26 @@ app.post('/api/persons', (req, res) => {
       .json({ error: 'name or number missing' })
   }
 
-  // Allow duplications: enabled
-  // if (Person.find({ name }).length > 0) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: 'name must be unique' })
-  // }
-
-
   const person = new Person({ name, number })
   person
     .save()
     .then(savedPerson => {
       res.json(savedPerson)
     })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = request.params
+  const { name, number } = request.body
+
+  const person = { name, number }
+
+  Person.findByIdAndUpdate(id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 
@@ -107,6 +118,13 @@ app.post('/api/persons', (req, res) => {
 app.get('*', (req, res) => {
   res.redirect(301, '/')
 })
+
+
+// handler of requests with unknown endpoint, at the end but before errorHandler
+app.use(unknownEndpoint)
+
+// handler of requests with result to errors, needs to be at the end
+app.use(errorHandler)
 
 
 app.listen(PORT, () => console.log(`App running on port ${PORT}`))
