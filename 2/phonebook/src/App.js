@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import personService from './services/personService';
+import { getAll, create, update, deleteOne } from './services/personService';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
@@ -15,8 +15,7 @@ const App = () => {
   const [success, setSuccess] = useState(true);
 
   useEffect(() => {
-    personService
-      .getAll()
+    getAll()
       .then(persons => {
         setPersons(persons);
       })
@@ -38,13 +37,16 @@ const App = () => {
 
       if (replace) {
 
-        personService
-          .update(personExists.id, newPerson)
+        update(personExists.id, newPerson)
           .then(changedPerson => {
-            setPersons(persons.map(person => person.id !== changedPerson.id ? person : changedPerson));
+            setPersons(
+              persons
+                .map(person => person.id !== changedPerson.id ? person : changedPerson)
+            );
+
             makeNotification(`Changed ${personExists.name}'s number`, true);
           })
-          .catch(err => {
+          .catch(error => {
             makeNotification(`Information on ${personExists.name} has been removed from the server`);
             setPersons(persons.filter(person => person.id !== personExists.id));
           });
@@ -53,8 +55,7 @@ const App = () => {
       return;
     }
 
-    personService
-      .create(newPerson)
+    create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
         makeNotification(`Added ${returnedPerson.name}`, true);
@@ -72,8 +73,7 @@ const App = () => {
   }
 
   const handleDelete = id => {
-    personService
-      .deleteOne(id)
+    deleteOne(id)
       .then(response => {
         setPersons(persons.filter(person => person.id !== id));
         makeNotification('Deleted successfully', true);
