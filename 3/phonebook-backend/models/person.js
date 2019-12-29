@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-
+const uniqueValidator = require('mongoose-unique-validator')
 mongoose.set('useFindAndModify', false)
 
 const url = process.env.MONGODB_URI
@@ -16,9 +16,16 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Define schema for Person
 const personSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    unique: true
+  },
   number: String
 })
+
+// Apply unique validator plugin
+personSchema.plugin(uniqueValidator)
 
 personSchema.methods.toJSON = function () {
   const user = this
