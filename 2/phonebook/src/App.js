@@ -63,8 +63,9 @@ const App = () => {
         setNewName('');
         setNewNumber('');
       })
-      .catch(err => {
-        makeNotification(`Can't add person, ${err}`, false);
+      .catch(error => {
+        const { response } = error
+        makeNotification(`Can't add person, ${response.data.error}`, false);
       });
   }
 
