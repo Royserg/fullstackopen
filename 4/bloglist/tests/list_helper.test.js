@@ -3,7 +3,8 @@ const {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 } = require('../utils/list_helper')
 
 // Global lists of blogs
@@ -112,6 +113,18 @@ describe('author with', () => {
     }
 
     const result = mostBlogs(blogs)
+    expect(result).toEqual(expected)
+  })
+})
+
+describe('author with', () => {
+  test.only('most likes', () => {
+    const expected = {
+      author: 'Edsger W. Dijkstra',
+      likes: 17
+    }
+
+    const result = mostLikes(blogs)
     expect(result).toEqual(expected)
   })
 })
