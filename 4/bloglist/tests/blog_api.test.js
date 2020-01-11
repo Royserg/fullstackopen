@@ -19,6 +19,7 @@ beforeEach(async () => {
   }
 })
 
+/* GET */
 describe('GET api calls return', () => {
   test('blogs are returned as json', async () => {
     await api
@@ -31,6 +32,13 @@ describe('GET api calls return', () => {
     const response = await api.get('/api/blogs')
 
     expect(response.body.length).toBe(initialBlogs.length)
+  })
+
+  test('blogs have `id` property', async () => {
+    const response = await api.get('/api/blogs')
+    response.body.forEach(blog => {
+      expect(blog.id).toBeDefined()
+    })
   })
 })
 
