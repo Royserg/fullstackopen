@@ -106,7 +106,7 @@ describe('favorite blog', () => {
 })
 
 describe('author with', () => {
-  test.only('most blogs', () => {
+  test('most blogs', () => {
     const expected = {
       author: 'Robert C. Martin',
       blogs: 3
@@ -118,7 +118,7 @@ describe('author with', () => {
 })
 
 describe('author with', () => {
-  test.only('most likes', () => {
+  test('most likes', () => {
     const expected = {
       author: 'Edsger W. Dijkstra',
       likes: 17
