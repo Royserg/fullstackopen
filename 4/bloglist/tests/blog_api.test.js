@@ -42,6 +42,31 @@ describe('GET api calls return', () => {
   })
 })
 
+/* POST */
+describe('POST api calls', () => {
+  test('a blog post can be added', async () => {
+    const blog = {
+      title: 'Added blog post - test',
+      author: 'Tester testerovsky',
+      url: 'testUrl.com',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await blogsInDb()
+    // There is an extra blog in db
+    expect(blogsAtEnd.length).toBe(initialBlogs.length + 1)
+    // Check if blog with title in db
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).toContain(blog.title)
+  })
+})
+
 // Close mongoose connection after tests are done
 afterAll(() => {
   mongoose.connection.close()
