@@ -66,7 +66,7 @@ describe('POST api calls', () => {
     expect(titles).toContain(blog.title)
   })
 
-  test('Not defined "likes" property, default to 0', async () => {
+  test('not defined "likes" property, default to 0', async () => {
     const blog = {
       title: 'Blog with missing likes',
       author: 'likes Misser',
@@ -79,6 +79,18 @@ describe('POST api calls', () => {
       .expect(201)
 
     expect(response.body.likes).toBeDefined()
+  })
+
+  test.only('missing `title` and `url` responds with 400', async () => {
+    const blog = {
+      author: 'noTitleBlogsvky',
+      likes: 7
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(400)
   })
 })
 
