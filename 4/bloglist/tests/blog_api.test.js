@@ -81,7 +81,7 @@ describe('POST api calls', () => {
     expect(response.body.likes).toBeDefined()
   })
 
-  test.only('missing `title` and `url` responds with 400', async () => {
+  test('missing `title` and `url` responds with 400', async () => {
     const blog = {
       author: 'noTitleBlogsvky',
       likes: 7
@@ -91,6 +91,29 @@ describe('POST api calls', () => {
       .post('/api/blogs')
       .send(blog)
       .expect(400)
+  })
+})
+
+/* DELETE */
+describe.only('deleting of a blog', () => {
+  test('succeeds with code 204 if id is valid', async () => {
+    const blogsAtStart = await blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+    const blogsAtEnd = await blogsInDb()
+
+    expect(blogsAtEnd.length).toBe(initialBlogs.length - 1)
+
+    const titles = blogsAtEnd.map(b => b.title)
+    expect(titles).not.toContain(blogToDelete.title)
+  })
+
+  test('fails with code 400 for invalid id', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api.delete(`/api/blogs/${invalidId}`).expect(400)
   })
 })
 
