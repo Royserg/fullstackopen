@@ -65,6 +65,21 @@ describe('POST api calls', () => {
     const titles = blogsAtEnd.map(b => b.title)
     expect(titles).toContain(blog.title)
   })
+
+  test('Not defined "likes" property, default to 0', async () => {
+    const blog = {
+      title: 'Blog with missing likes',
+      author: 'likes Misser',
+      url: 'noLikes.com'
+    }
+
+    const response = await api
+      .post('/api/blogs')
+      .send(blog)
+      .expect(201)
+
+    expect(response.body.likes).toBeDefined()
+  })
 })
 
 // Close mongoose connection after tests are done
