@@ -24,4 +24,6 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true
 })
 
+mongoose.set('useFindAndModify', false)
+
 module.exports = app
