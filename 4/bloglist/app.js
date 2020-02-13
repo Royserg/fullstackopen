@@ -1,7 +1,10 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
+
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
+
 const errorHandler = require('./middlewares/errorHandler')
 const { MONGODB_URI } = require('./utils/config')
 
@@ -14,6 +17,7 @@ app.use(express.json())
 
 // Apply controllers
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 // Apply error handler middleware
 app.use(errorHandler)
