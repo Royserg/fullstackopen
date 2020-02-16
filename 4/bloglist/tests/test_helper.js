@@ -1,5 +1,5 @@
 const Blog = require('../models/blog')
-const Author = require('../models/author')
+const User = require('../models/user')
 
 const initialBlogs = [
   {
@@ -55,7 +55,7 @@ const blogsInDb = async () => {
 }
 
 const usersInDB = async () => {
-  const users = Author.find({})
+  const users = User.find({})
   return users
 }
 
